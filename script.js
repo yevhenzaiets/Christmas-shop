@@ -105,14 +105,24 @@ async function showGifts() {
 showGifts();
 
 function swichPopup() {
-    document.querySelector(".popup").classList.add("open");
-    document.querySelector('body').classList.add("hidden");
-    document.querySelector(".close_modal").addEventListener('click', () => {
-        document.querySelector(".popup").classList.remove("open");
-        document.querySelector('body').classList.remove("hidden");
-    })
+    const popup = document.querySelector(".popup");
+    const body = document.querySelector("body");
+    const closeButton = document.querySelector(".close_modal");
+
+    popup.classList.add("open");
+    body.classList.add("hidden");
+
+    closeButton.onclick = () => closePopup(popup, body);
+
+    window.onclick = function(e) {
+        if(e.target === popup) closePopup(popup, body);
+    }
 };
 
+function closePopup(popup, body) {
+    popup.classList.remove("open");
+    body.classList.remove("hidden");
+}
 
 function showPopupContent(currentCard, cardImgSrc) {
     modalImg.innerHTML = '';
@@ -179,3 +189,26 @@ function drawStars(number, starContainer) {
         i < calculateNumber ? star.classList.add('star') : star.classList.add('star_opasity');
     }
 }
+
+//// TIMER
+function updateCountdown() {
+    const now = new Date();
+    const nextYear = new Date(now.getFullYear() + 1, 0, 1); // 1 січня наступного року
+    const timeLeft = nextYear - now; // Залишок часу в мілісекундах
+
+    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+    const seconds = Math.floor((timeLeft / 1000) % 60);
+
+    document.getElementById("days").textContent = days;
+    document.getElementById("hours").textContent = hours;
+    document.getElementById("minutes").textContent = minutes;
+    document.getElementById("seconds").textContent = seconds;
+}
+
+// Оновлювати таймер кожну секунду
+setInterval(updateCountdown, 1000);
+
+// Викликати функцію одразу, щоб не чекати 1 секунду
+updateCountdown();
